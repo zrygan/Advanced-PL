@@ -1,11 +1,11 @@
 # Advanced-PL
 Repository for CSADPRG (Concepts of Advanced Programming Languages)
 
-**Project Specifications**
+**Project Phases**
 
-- MCO1: Mini Project
-- MCO2: Mini Project
-- MCO3: Comparative Analysis Paper 
+- MCO1: Mini Project (../MCO1)
+- MCO2: Mini Project (../MCO2)
+- MCO3: Comparative Analysis Paper ((Google Docs)[https://docs.google.com/document/d/1GSU2kTfCSKyyOltu5SHcvRknMZsX0G6xoQJwc-D_QLs/edit?usp=sharing]) 
 
 ## Information
 
