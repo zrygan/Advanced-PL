@@ -3,8 +3,8 @@ Repository for CSADPRG (Concepts of Advanced Programming Languages)
 
 **Project Phases**
 
-- MCO1: Mini Project ([../MCO1](https://github.com/zrygan/Advanced-PL/MCO1))
-- MCO2: Mini Project ([../MCO2](https://github.com/zrygan/Advanced-PL/MCO2))
+- MCO1: Mini Project ([../MCO1](https://github.com/zrygan/Advanced-PL/tree/main/MCO1))
+- MCO2: Mini Project ([../MCO2](https://github.com/zrygan/Advanced-PL/tree/main/MCO2))
 - MCO3: Comparative Analysis Paper ([Google Docs](https://docs.google.com/document/d/1GSU2kTfCSKyyOltu5SHcvRknMZsX0G6xoQJwc-D_QLs/edit?usp=sharing))
 
 ## Information
