@@ -3,18 +3,18 @@ Repository for CSADPRG (Concepts of Advanced Programming Languages)
 
 **Project Phases**
 
-- MCO1: Mini Project (../MCO1)
-- MCO2: Mini Project (../MCO2)
-- MCO3: Comparative Analysis Paper ((Google Docs)[https://docs.google.com/document/d/1GSU2kTfCSKyyOltu5SHcvRknMZsX0G6xoQJwc-D_QLs/edit?usp=sharing]) 
+- MCO1: Mini Project ([../MCO1](https://github.com/zrygan/Advanced-PL/MCO1))
+- MCO2: Mini Project ([../MCO2](https://github.com/zrygan/Advanced-PL/MCO2))
+- MCO3: Comparative Analysis Paper ([Google Docs](https://docs.google.com/document/d/1GSU2kTfCSKyyOltu5SHcvRknMZsX0G6xoQJwc-D_QLs/edit?usp=sharing))
 
 ## Information
 
 ### Documentation for Programming Languages:
 
-- (Go)[https://go.dev/doc/]
-- (Kotlin)[https://kotlinlang.org/docs/home.html]
-- (R)[https://www.r-project.org/other-docs.html]
-- (Ruby)[https://www.ruby-lang.org/en/documentation/]
+- [Go](https://go.dev/doc/)
+- [Kotlin](https://kotlinlang.org/docs/home.html)
+- [R](https://www.r-project.org/other-docs.html)
+- [Ruby](https://www.ruby-lang.org/en/documentation/)
 
 #### Programming Language assignments:
 
@@ -30,9 +30,9 @@ Repository for CSADPRG (Concepts of Advanced Programming Languages)
 
 ## Misc
 
-Codeacademy courses for the Programming Languages:
+Codecademy courses for the Programming Languages:
 
-- (Go)[https://www.codecademy.com/catalog/language/go]
-- (Kotlin)[https://www.codecademy.com/catalog/language/kotlin]
-- (R)[https://www.codecademy.com/catalog/language/r]
-- (Ruby)[https://www.codecademy.com/catalog/language/ruby]
+- [Go](https://www.codecademy.com/catalog/language/go)
+- [Kotlin](https://www.codecademy.com/catalog/language/kotlin)
+- [R](https://www.codecademy.com/catalog/language/r)
+- [Ruby](https://www.codecademy.com/catalog/language/ruby)
