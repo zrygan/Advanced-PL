@@ -19,7 +19,7 @@ Repository for CSADPRG (Concepts of Advanced Programming Languages)
 #### Programming Language assignments:
 
 - @zrygan: Go
-- ___: Kotlin
+- @JustinChing30: Kotlin
 - ___: R
 
 ### Project Deadlines:
