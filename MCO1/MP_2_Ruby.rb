@@ -1,5 +1,5 @@
 =begin
-  Last names: Miranda, Ching, Ganituen
+  Last names: Miranda
   Language: Ruby
   Paradigm(s):Multi-paradigm: Object-Oriented Programming, Functional, and Generic
 =end
