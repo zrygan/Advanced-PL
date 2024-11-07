@@ -1,3 +1,11 @@
+/*
+******************
+Last names: Ganituen
+Language: Go
+Paradigm(s): Imperative, Procedural 
+******************
+*/
+
 package main
 
 import "fmt"
