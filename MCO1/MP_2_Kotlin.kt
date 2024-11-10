@@ -19,8 +19,8 @@ fun main() {
 
     val ratePercent = rate / 100
 
-    print("Loan Term: ")
-    val duration = scanner.nextInt()
+    print("Loan Term (in years): ")
+    val duration = scanner.nextDouble()
 
     val monthlyRate = ratePercent / 12
     val loanMonths = duration * 12
@@ -31,7 +31,7 @@ fun main() {
 
     println("\nLoan Amount: PHP $loan")
     println("Annual Interest Rate: $rate%")
-    println("Loan Term: $loanMonths months")
+    println("Loan Term: ${"%,.0f".format(loanMonths)} months")
     println("Monthly Repayment: PHP ${"%,.2f".format(repayment)}")
     println("Total Interest: PHP ${"%,.2f".format(totalInterest)}")
 }
