@@ -10,19 +10,23 @@ package main
 
 import "fmt"
 
-func monthlyIr(ir float32) float32 {
+// Function to calculate the monthly interest rate
+func monthlyIr(ir float64) float64 {
 	return ir / 100 / 12 // Convert percentage to decimal and then to monthly
 }
 
-func loanTermMonths(loanTerm int32) int32 {
+// Function to convert loan term from years to months
+func loanTermMonths(loanTerm int64) int64 {
 	return loanTerm * 12
 }
 
-func totalInterest(loanAmount float64, monthlyIr float32, loanTermMonths int32) float64 {
-	return loanAmount * float64(monthlyIr) * float64(loanTermMonths)
+// Function to calculate the total interest over the loan term
+func totalInterest(loanAmount float64, monthlyIr float64, loanTermMonths int64) float64 {
+	return loanAmount * monthlyIr * float64(loanTermMonths)
 }
 
-func monthlyRepayment(loanAmount float64, totalInterest float64, loanTermMonths int32) float64 {
+// Function to calculate the monthly repayment amount
+func monthlyRepayment(loanAmount float64, totalInterest float64, loanTermMonths int64) float64 {
 	return (loanAmount + totalInterest) / float64(loanTermMonths)
 }
 
@@ -33,10 +37,10 @@ func main() {
 
 	// the interest rate (the percentage part)
 	// if interest rate is 3.2% then interest_rate = 3.2
-	var interestRate float32
+	var interestRate float64
 
 	// the loan term (number of years)
-	var loanTerm int32
+	var loanTerm int64
 
 	fmt.Print("Loan Amount: ")
 	fmt.Scan(&loanAmount)
@@ -56,3 +60,4 @@ func main() {
 	fmt.Printf("Monthly Repayment: PHP %.2f\n", monthlyRepayment)
 	fmt.Printf("Total Interest: PHP %.2f\n", totalInterest)
 }
+
