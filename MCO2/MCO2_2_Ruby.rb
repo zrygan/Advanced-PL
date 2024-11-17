@@ -1,5 +1,8 @@
 require 'csv'
 require 'date'
+# to use the QuickChart API
+require 'json'
+require 'http'
 
 # Input file
 print "Enter the filename: "
@@ -97,6 +100,138 @@ unique_words = 0
     puts "#{word}: #{count}" 
   end
 
+wordcloud_setup = {
+  format: "png",
+  width: 1000,
+  height: 1000,
+  fontFamily: "sans-serif",
+  scale: "linear",
+  text: word_count.map { |word, count| ([word] * count).join(' ') }.join(' ')
+}
+
+# Convert the setup to json
+cloud_json = wordcloud_setup.to_json
+
+# Make the POST request to QuickChart
+word_cloud_url = 'https://quickchart.io/wordcloud'
+response1 = HTTP.post(word_cloud_url, headers: { 'Content-Type' => 'application/json' }, body: cloud_json)
+
+# Check if the request was successful and save the image
+if response1.status.success?
+  File.open('ruby-wordcloud.png', 'wb') do |file|
+    file.write(response1.body)
+    puts "Word Cloud Success"
+  end
+  else
+    puts "Error: #{response1.body.to_s}"
+  end
+end
+
+# Bar Chart Setups
+month_labels = monthly_data.keys
+month_data = monthly_data.values
+
+bar_design = {
+  type: 'bar',
+  data: {
+    labels: month_labels,
+    datasets: [{
+      label: 'Monthly Tweets',
+      data: month_data,
+      backgroundColor: 'blue',
+      borderColor: 'black',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top'
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+}
+
+bar_setup = {
+  chart: bar_design.to_json,
+  width: 800,
+  height: 600,
+  backgroundColor: 'white',
+  format: 'png',
+  version: '4'
+}
+
+bar_json = bar_setup.to_json
+
+chart_url = 'https://quickchart.io/chart'
+response2 = HTTP.post(chart_url, headers: { 'Content-Type' => 'application/json' }, body: bar_json)
+
+if response2.status.success?
+  File.open('ruby-bar.png', 'wb') do |file|
+    file.write(response2.body)
+    puts "Bar Chart Success"
+  end
 else
-  puts "File not found."
+  puts "Error: #{response2.body.to_s}"
+end
+
+def random_color
+  format('#%06x', rand(0..0xFFFFFF))
+end
+
+# Pie Chart Setups
+pie_labels = special.keys
+pie_data = special.values
+
+background_colors = pie_labels.map { random_color }
+
+pie_design = {
+  type: 'pie',
+  data: {
+    labels: pie_labels,
+    datasets: [{
+      data: pie_data,
+      backgroundColor: background_colors,
+      borderColor: 'white',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    plugins: {
+      legend: {
+        display: true,
+        position: 'right'
+      }
+    }
+  }
+}
+
+pie_setup = {
+  chart: pie_design.to_json,
+  width: 800,
+  height: 600,
+  devicePixelRatio: 2,
+  backgroundColor: 'white',
+  format: 'png',
+  version: '4'
+}
+
+pie_json = pie_setup.to_json
+
+chart_url = 'https://quickchart.io/chart'
+response3 = HTTP.post(chart_url, headers: { 'Content-Type' => 'application/json' }, body: pie_json)
+
+if response3.status.success?
+  File.open('ruby-pie.png', 'wb') do |file|
+    file.write(response3.body)
+    puts "Pie Chart Success"
+  end
+else
+  puts "Error: #{response3.body.to_s}"
 end
