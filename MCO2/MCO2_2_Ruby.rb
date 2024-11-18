@@ -1,5 +1,6 @@
 require 'csv'
 require 'date'
+
 # to use the QuickChart API
 require 'json'
 require 'http'
@@ -8,20 +9,6 @@ require 'http'
 print "Enter the filename: "
 filename = gets.chomp
 
-# to do
-# while passing, count total words
-  # total num of unique words
-  # word frequency
-    # will later find 20 most freq words
-  # frequency for all chars then sort
-    # set to lowercase to count accurately
-  # identify 10 stop words
-
-  # make a separate hash for non-alphanumeric symbols
-  # make a hash for each month
-
-# visualize data 
-
 # Initialize hashes and counters
 word_count = Hash.new(0)
 char_count = Hash.new(0)
@@ -29,6 +16,16 @@ special = Hash.new(0)
 monthly_data = Hash.new(0)
 total_words = 0
 unique_words = 0
+
+$stop_words = {"a"=>0, "an"=>0, "the"=>0, "and"=>0, "but"=>0, "or"=>0, "in"=>0, "on"=>0, "at"=>0, "with"=>0}
+$stops_total = 0
+
+def find_stops(word)
+  if $stop_words.key?(word)
+    $stop_words[word] += 1
+    $stops_total += 1
+  end
+end
 
 # Read CSV file if it exists
   if File.exist?(filename)
@@ -40,6 +37,8 @@ unique_words = 0
         words.each do |word|
           word_count[word] += 1
           total_words += 1
+
+          find_stops(word);
     
           word.each_char do |char|
             if char =~ /\A\p{Alnum}+\z/
@@ -79,6 +78,12 @@ unique_words = 0
   special.sort_by { |symbol, count| -count }.first(10).each do |char, count|
     puts "#{char}: #{count}"
   end
+
+  puts "\nTotal Stop words: #{$stops_total}"
+  $stop_words.each do |word, count|
+    puts "#{word}: #{count}"
+  end
+
 
   puts "\nMonth Tweets:"
   monthly_data.sort_by { |month, count| -count }.each do |month, count|
