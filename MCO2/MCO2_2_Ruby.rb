@@ -1,5 +1,6 @@
 require 'csv'
 require 'date'
+
 # to use the QuickChart API
 require 'json'
 require 'http'
@@ -7,20 +8,6 @@ require 'http'
 # Input file
 print "Enter the filename: "
 filename = gets.chomp
-
-# to do
-# while passing, count total words
-  # total num of unique words
-  # word frequency
-    # will later find 20 most freq words
-  # frequency for all chars then sort
-    # set to lowercase to count accurately
-  # identify 10 stop words
-
-  # make a separate hash for non-alphanumeric symbols
-  # make a hash for each month
-
-# visualize data 
 
 # Initialize hashes and counters
 word_count = Hash.new(0)
@@ -30,18 +17,41 @@ monthly_data = Hash.new(0)
 total_words = 0
 unique_words = 0
 
+# For the stop words
+# note how $ makes a variable a global variable
+# within ruby, only local scopes are accessible within functions
+$stop_words = {"a"=>0, "an"=>0, "the"=>0, "and"=>0, "but"=>0, "or"=>0, "in"=>0, "on"=>0, "at"=>0, "with"=>0}
+$stops_total = 0
+
+
+# To update stop word counter
+def find_stops(word)
+  if $stop_words.key?(word)
+    $stop_words[word] += 1
+    $stops_total += 1
+  end
+end
+
 # Read CSV file if it exists
   if File.exist?(filename)
+    # Uses the csv folder to read each row
+    # headers: true assigns it to a hash
     CSV.foreach(filename, headers: true) do |row|
-      # Tweet text
+      # Note how ifs are used, this is to only read the relevant tables
+
       if row['text']
         text = row['text']
+        # Text is set to downcase to read all letters the same regardless of letter case
+        # .split will split it to each word
         words = text.downcase.split
         words.each do |word|
           word_count[word] += 1
           total_words += 1
+
+          find_stops(word);
     
           word.each_char do |char|
+            # That regex is used to check if it is alphanumeric
             if char =~ /\A\p{Alnum}+\z/
               char_count[char] += 1
             else
@@ -54,8 +64,10 @@ unique_words = 0
       # For month counting
       if row['date_created']
         begin
+          # uses datetime library
+          # makes the date a DateTime object
           date = DateTime.strptime(row['date_created'], '%Y-%m-%d %H:%M:%S')
-          # for getting month in word form
+          # to get the month in the DateTime
           month = date.strftime('%B')
           monthly_data[month] += 1
         end
@@ -71,6 +83,8 @@ unique_words = 0
   puts "Unique words: #{unique_words}"
 
   puts "\nTop 20 most frequent words:"
+
+  #.first will be used to easily limit
   word_count.sort_by { |word, count| -count }.first(20).each do |word, count|
     puts "#{word}: #{count}"
   end
@@ -78,6 +92,11 @@ unique_words = 0
   puts "\nTop 10 most frequent special characters:"
   special.sort_by { |symbol, count| -count }.first(10).each do |char, count|
     puts "#{char}: #{count}"
+  end
+
+  puts "\nTotal Stop words: #{$stops_total}"
+  $stop_words.each do |word, count|
+    puts "#{word}: #{count}"
   end
 
   puts "\nMonth Tweets:"
@@ -99,6 +118,18 @@ unique_words = 0
   word_count.sort_by { |word, count| -count }.each do |word, count|
     puts "#{word}: #{count}" 
   end
+
+
+# GRAPH MAKINGS
+# Uses the quickchart.io to create the images
+# It allows for easy creation of images without needing to do any downloads or installs
+
+# Ruby's chart creation is limited especially with word clouds
+# Other sources such as magic_cloud need the rmagick and imagemagick 
+# which will also need installs within the computer and have limited documentation
+# to limit potential machine-specific errors, online apis were used instead
+
+# by using Ruby's json library, requests can be easily sent
 
 wordcloud_setup = {
   format: "png",
