@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"image/color"
+	"image/png"
 	"strconv"
 	"strings"
 	"unicode"
@@ -10,6 +12,10 @@ import (
 	"os"
 	"sort"
 	"time"
+
+	"github.com/vicanso/go-charts/v2"
+
+	"github.com/psykhi/wordclouds"
 )
 
 var file_name string
@@ -62,7 +68,7 @@ func is_alphanum(r rune) bool {
 	return unicode.IsLetter(r) || unicode.IsDigit(r)
 }
 
-func count_words() {
+func count_all() {
 	for _, entry := range text {
 		word_list := strings.Split(strings.ToLower(entry), " ") // split the words by " "
 		for _, word := range word_list {
@@ -127,6 +133,47 @@ func to_str(n int) string {
 	return strconv.Itoa(n)
 }
 
+func to_arrays(list map[string]int) ([]string, []int) {
+	var string_array []string
+	var int_array []int
+
+	for i, j := range list {
+		string_array = append(string_array, i)
+		int_array = append(int_array, j)
+	}
+
+	return string_array, int_array
+}
+
+func months_to_numeric(months []string) []string {
+	month_map := map[string]string{
+		"January":   "1",
+		"February":  "2",
+		"March":     "3",
+		"April":     "4",
+		"May":       "5",
+		"June":      "6",
+		"July":      "7",
+		"August":    "8",
+		"September": "9",
+		"October":   "10",
+		"November":  "11",
+		"December":  "12",
+	}
+
+	var months_converted []string
+
+	for _, month := range months {
+		if num, ok := month_map[month]; ok {
+			months_converted = append(months_converted, num)
+		} else {
+			fmt.Println("Error <months_to_numeric>, month not found")
+		}
+	}
+
+	return months_converted
+}
+
 func view_results() {
 	fmt.Println("--- Results ---")
 	fmt.Println("Total Words: " + to_str(total_words))
@@ -180,17 +227,120 @@ func view_results() {
 	for _, entry := range sorted_words {
 		fmt.Printf("%s: %d\n", entry.String, entry.Value)
 	}
+}
 
+func write_file(buff []byte, filename string) error {
+	err := os.WriteFile(filename, buff, 0600)
+	if err != nil {
+		fmt.Println(">>> PLOT_PIE : Cannot save bar chart")
+		return err
+	}
+
+	return nil
+}
+
+func plot_bar(months []string, values []int) {
+	var values_f []float64
+	for _, val := range values {
+		values_f = append(values_f, float64(val))
+	}
+
+	months_numeric := months_to_numeric(months)
+
+	p, err := charts.BarRender(
+		[][]float64{values_f},
+		charts.XAxisDataOptionFunc(months_numeric),
+		charts.LegendLabelsOptionFunc([]string{
+			"Occurrences",
+		}, charts.PositionRight),
+	)
+
+	if err != nil {
+		fmt.Println(">>> PLOT_BAR : Cannot create bar chart")
+	}
+
+	buff, err := p.Bytes()
+	if err != nil {
+		fmt.Println(">>> PLOT_BAR : Cannot create bar chart")
+	}
+
+	err = write_file(buff, "go-bar.png")
+	if err != nil {
+		fmt.Println(">>> PLOT_BAR : Cannot create bar chart")
+	}
+}
+
+func plot_pie(specs []string, values []int) {
+	var values_f []float64
+	for val := range values {
+		values_f = append(values_f, float64(val))
+	}
+
+	p, err := charts.PieRender(
+		values_f,
+		charts.TitleOptionFunc(charts.TitleOption{
+			Text: "Occurence of Each Special Character",
+			Left: charts.PositionCenter,
+		}),
+		charts.LegendOptionFunc(charts.LegendOption{
+			Orient: charts.OrientVertical,
+			Data:   specs,
+			Left:   charts.PositionLeft,
+		}),
+		charts.PieSeriesShowLabel(),
+	)
+
+	if err != nil {
+		fmt.Println(">>> PLOT_PIE : Cannot create pie chart")
+	}
+
+	buff, err := p.Bytes()
+	if err != nil {
+		fmt.Println(">>> PLOT_PIE : Cannot create pie chart")
+	}
+
+	err = write_file(buff, "go-pie.png")
+	if err != nil {
+		fmt.Println(">>> PLOT_PIE : Cannot create pie chart")
+	}
+}
+
+func plot_cloud(wordCounts map[string]int) {
+	wc := wordclouds.NewWordcloud(wordCounts,
+		wordclouds.FontMaxSize(100),
+		wordclouds.FontMinSize(10),
+		wordclouds.RandomPlacement(true),
+		wordclouds.Width(800),
+		wordclouds.Height(800),
+		wordclouds.BackgroundColor(color.RGBA{255, 255, 255, 255}),
+	)
+
+	img := wc.Draw()
+
+	outputFile, err := os.Create("go-wordcloud.png")
+	if err != nil {
+		fmt.Println(">>> PLOT_CLOUD : Cannot create word cloud")
+	}
+	defer outputFile.Close()
+
+	err = png.Encode(outputFile, img)
+	if err != nil {
+		fmt.Println(">>> PLOT_CLOUD : Cannot create word cloud")
+	}
 }
 
 func main() {
-	fmt.Print("Enter filename: ")
-	fmt.Scan(&file_name)
+	// fmt.Print("Enter filename: ")
+	// fmt.Scan(&file_name)
+	file_name = "fake_tweets.csv"
 
 	data := get_csv(file_name)
 	arrange_data(data)
 
-	count_words()
+	count_all()
 	count_tweets_per_month()
 	view_results()
+	plot_bar(to_arrays(monthly_data))
+	plot_pie(to_arrays(spec_counts))
+	plot_cloud(word_counts)
 }
