@@ -31,8 +31,7 @@ fun fileScan(): File {
             print("Input file name (including extension): ")
             val fileName = scanner.nextLine()
 
-            val filePath = "E:/Media Files/Real Stuff/School/Activities/Year 2/Term 1/CSADPRG/MCO2/${fileName}"
-            val file = File(filePath)
+            val file = File(fileName)
 
             if (!file.exists()) {
                 throw FileNotFoundException("$fileName was not found. Please try again.")
