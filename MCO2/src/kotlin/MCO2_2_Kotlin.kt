@@ -8,6 +8,7 @@ import com.kennycason.kumo.WordFrequency
 import com.kennycason.kumo.bg.CircleBackground
 import com.kennycason.kumo.font.scale.LinearFontScalar
 import org.knowm.xchart.*
+import java.io.FileNotFoundException
 
 /*
 
@@ -22,28 +23,28 @@ Parameters: none
 Return type: File
 */
 
-//fun fileScan(): File {
-//    val scanner = Scanner(System.`in`)
-//
-//    while (true) { // while  loop to check if file exists
-//        try { // try-catch to not stop program when file doesn't exist
-//            print("Input file name (including extension): ")
-//            val fileName = scanner.nextLine()
-//
-//            val filePath = "E:/Media Files/Real Stuff/School/Activities/Year 2/Term 1/CSADPRG/MCO2/${fileName}"
-//            val file = File(filePath)
-//
-//            if (!file.exists()) {
-//                throw FileNotFoundException("$fileName was not found. Please try again.")
-//            }
-//
-//            return file
-//        }
-//        catch (e: FileNotFoundException) {
-//            println("${e.message}")
-//        }
-//    }
-//}
+fun fileScan(): File {
+    val scanner = Scanner(System.`in`)
+
+    while (true) { // while  loop to check if file exists
+        try { // try-catch to not stop program when file doesn't exist
+            print("Input file name (including extension): ")
+            val fileName = scanner.nextLine()
+
+            val filePath = "E:/Media Files/Real Stuff/School/Activities/Year 2/Term 1/CSADPRG/MCO2/${fileName}"
+            val file = File(filePath)
+
+            if (!file.exists()) {
+                throw FileNotFoundException("$fileName was not found. Please try again.")
+            }
+
+            return file
+        }
+        catch (e: FileNotFoundException) {
+            println("${e.message}")
+        }
+    }
+}
 
 /*
 Description: Used to count total amount of words.
@@ -251,10 +252,7 @@ fun symbolsGraph(allLines: MutableList<List<String>>) {
 }
 
 fun main() {
-
-    val filePath = "E:/Media Files/Real Stuff/School/Activities/Year 2/Term 1/CSADPRG/MCO2/fake_tweets.csv"
-
-    val file = File(filePath)
+    val file = fileScan()
     val allLines = mutableListOf<List<String>>()
     val top20 = mutableMapOf<String, Int>()
 
