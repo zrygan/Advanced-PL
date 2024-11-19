@@ -162,7 +162,7 @@ fun stopWords(allLines: MutableList<List<String>>) {
     val stopWordsMap = mutableMapOf<String, Boolean>()
 
     for (i in stopWords) {
-        stopWordsMap[i] = stopWords.contains(i)
+        stopWordsMap[i] = wordsList.contains(i)
     }
 
     println("\nStop words:")
@@ -259,7 +259,7 @@ fun main() {
     val top20 = mutableMapOf<String, Int>()
 
     file.forEachLine { line ->
-        val wholeLine = line.split(",").map {it.lowercase()}
+        val wholeLine = line.split(",").map { it.lowercase() }
         allLines.add(wholeLine)
     }
 
