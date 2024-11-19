@@ -186,7 +186,7 @@ fun top20wordCloud(wordFreq: List<WordFrequency>) {
     wordCloud.setColorPalette(com.kennycason.kumo.palette.ColorPalette(Color(52, 180, 235), Color(247, 45, 122)))
     wordCloud.setFontScalar(LinearFontScalar(10, 40))
     wordCloud.build(wordFreq)
-    wordCloud.writeToFile("C:/Users/My PC/Downloads/output.png")
+    wordCloud.writeToFile("C:/Users/My PC/Downloads/top20wordCloud.png")
 }
 
 /*
@@ -220,6 +220,11 @@ fun monthlyPostsGraph(allLines: MutableList<List<String>>) {
     SwingWrapper(barChart).displayChart() // Displays the chart
 }
 
+/*
+Description: Used to generate a pie graph of the frequency of symbols found in the 'text' column.
+Parameters: allLines is a List of List of Strings
+Return type: none
+*/
 fun symbolsGraph(allLines: MutableList<List<String>>) {
     val symbolsList = mutableListOf<Char>()
 
