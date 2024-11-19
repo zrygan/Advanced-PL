@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	"image/color"
-	"image/png"
+	"io"
 	"strconv"
 	"strings"
 	"unicode"
@@ -13,9 +12,11 @@ import (
 	"sort"
 	"time"
 
-	"github.com/vicanso/go-charts/v2"
+	vicanso "github.com/vicanso/go-charts/v2"
 
-	"github.com/psykhi/wordclouds"
+	echarts_charts "github.com/go-echarts/go-echarts/v2/charts"
+	echarts_compos "github.com/go-echarts/go-echarts/v2/components"
+	echarts_option "github.com/go-echarts/go-echarts/v2/opts"
 )
 
 var file_name string
@@ -247,12 +248,12 @@ func plot_bar(months []string, values []int) {
 
 	months_numeric := months_to_numeric(months)
 
-	p, err := charts.BarRender(
+	p, err := vicanso.BarRender(
 		[][]float64{values_f},
-		charts.XAxisDataOptionFunc(months_numeric),
-		charts.LegendLabelsOptionFunc([]string{
+		vicanso.XAxisDataOptionFunc(months_numeric),
+		vicanso.LegendLabelsOptionFunc([]string{
 			"Occurrences",
-		}, charts.PositionRight),
+		}, vicanso.PositionRight),
 	)
 
 	if err != nil {
@@ -276,18 +277,18 @@ func plot_pie(specs []string, values []int) {
 		values_f = append(values_f, float64(val))
 	}
 
-	p, err := charts.PieRender(
+	p, err := vicanso.PieRender(
 		values_f,
-		charts.TitleOptionFunc(charts.TitleOption{
+		vicanso.TitleOptionFunc(vicanso.TitleOption{
 			Text: "Occurence of Each Special Character",
-			Left: charts.PositionCenter,
+			Left: vicanso.PositionCenter,
 		}),
-		charts.LegendOptionFunc(charts.LegendOption{
-			Orient: charts.OrientVertical,
+		vicanso.LegendOptionFunc(vicanso.LegendOption{
+			Orient: vicanso.OrientVertical,
 			Data:   specs,
-			Left:   charts.PositionLeft,
+			Left:   vicanso.PositionLeft,
 		}),
-		charts.PieSeriesShowLabel(),
+		vicanso.PieSeriesShowLabel(),
 	)
 
 	if err != nil {
@@ -305,28 +306,39 @@ func plot_pie(specs []string, values []int) {
 	}
 }
 
-func plot_cloud(wordCounts map[string]int) {
-	wc := wordclouds.NewWordcloud(wordCounts,
-		wordclouds.FontMaxSize(100),
-		wordclouds.FontMinSize(10),
-		wordclouds.RandomPlacement(true),
-		wordclouds.Width(800),
-		wordclouds.Height(800),
-		wordclouds.BackgroundColor(color.RGBA{255, 255, 255, 255}),
+func generate_plot_wc_data(data map[string]int) (items []echarts_option.WordCloudData) {
+	items = make([]echarts_option.WordCloudData, 0)
+
+	for String, Count := range data {
+		items = append(items, echarts_option.WordCloudData{Name: String, Value: Count})
+	}
+	return
+}
+
+func plot_wc() *echarts_charts.WordCloud {
+	wc := echarts_charts.NewWordCloud()
+	wc.SetGlobalOptions(
+		echarts_charts.WithTitleOpts(echarts_option.Title{
+			Title: "Frequency of All Words",
+		}))
+
+	wc.AddSeries("wordcloud", generate_plot_wc_data(word_counts)).SetSeriesOptions(echarts_charts.WithWorldCloudChartOpts(echarts_option.WordCloudChart{SizeRange: []float32{14, 140}}))
+
+	return wc
+}
+
+func make_plot_wc() {
+	page := echarts_compos.NewPage()
+	page.AddCharts(
+		plot_wc(),
 	)
 
-	img := wc.Draw()
-
-	outputFile, err := os.Create("go-wordcloud.png")
+	file, err := os.Create("go-wordcloud.html")
 	if err != nil {
-		fmt.Println(">>> PLOT_CLOUD : Cannot create word cloud")
+		fmt.Println(">>> WORD_CLOUD : Cannot create HTML file of wordcloud")
 	}
-	defer outputFile.Close()
 
-	err = png.Encode(outputFile, img)
-	if err != nil {
-		fmt.Println(">>> PLOT_CLOUD : Cannot create word cloud")
-	}
+	page.Render(io.MultiWriter(file))
 }
 
 func main() {
@@ -342,5 +354,5 @@ func main() {
 	view_results()
 	plot_bar(to_arrays(monthly_data))
 	plot_pie(to_arrays(spec_counts))
-	plot_cloud(word_counts)
+	make_plot_wc()
 }
