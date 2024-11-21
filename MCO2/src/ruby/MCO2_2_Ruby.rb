@@ -1,13 +1,8 @@
-<<<<<<< HEAD
-# NOTE: TO MAKE GRAPHS WORK, MAKE SURE TO BE IN THE MCO2 FOLDER WHEN RUNNING
-# THE CREATION SEEMS TO BREAK AND PLACE IMAGES IN CURRENT DIRECTORY OTHERWISE
-=======
 =begin
   Last names: Miranda
   Language: Ruby
   Paradigm(s):Multi-paradigm: Object-Oriented Programming, Functional, and Generic
 =end
->>>>>>> 4a05da53d291205ca676c0aae196cf76c4105888
 
 require 'csv'
 require 'date'
