@@ -1,3 +1,11 @@
+/*
+******************
+Last names: Ching
+Language: Kotlin
+Paradigm(s): Functional, Imperative, Object-oriented, Procedural
+******************
+*/
+
 import com.kennycason.kumo.CollisionMode
 import java.awt.Color
 import java.awt.Dimension
