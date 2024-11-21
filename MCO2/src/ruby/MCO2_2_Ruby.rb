@@ -92,8 +92,8 @@ end
     puts "#{word}: #{count}"
   end
 
-  puts "\nTop 10 most frequent special characters:"
-  special.sort_by { |symbol, count| -count }.first(10).each do |char, count|
+  puts "\nAll special characters:"
+  special.sort_by { |symbol, count| -count }.each do |char, count|
     puts "#{char}: #{count}"
   end
 
