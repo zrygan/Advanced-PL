@@ -8,6 +8,7 @@ import com.kennycason.kumo.WordFrequency
 import com.kennycason.kumo.bg.CircleBackground
 import com.kennycason.kumo.font.scale.LinearFontScalar
 import org.knowm.xchart.*
+import java.io.FileNotFoundException
 
 /*
 
@@ -22,28 +23,27 @@ Parameters: none
 Return type: File
 */
 
-//fun fileScan(): File {
-//    val scanner = Scanner(System.`in`)
-//
-//    while (true) { // while  loop to check if file exists
-//        try { // try-catch to not stop program when file doesn't exist
-//            print("Input file name (including extension): ")
-//            val fileName = scanner.nextLine()
-//
-//            val filePath = "E:/Media Files/Real Stuff/School/Activities/Year 2/Term 1/CSADPRG/MCO2/${fileName}"
-//            val file = File(filePath)
-//
-//            if (!file.exists()) {
-//                throw FileNotFoundException("$fileName was not found. Please try again.")
-//            }
-//
-//            return file
-//        }
-//        catch (e: FileNotFoundException) {
-//            println("${e.message}")
-//        }
-//    }
-//}
+fun fileScan(): File {
+    val scanner = Scanner(System.`in`)
+
+    while (true) { // while  loop to check if file exists
+        try { // try-catch to not stop program when file doesn't exist
+            print("Input file name (including extension): ")
+            val fileName = scanner.nextLine()
+
+            val file = File(fileName)
+
+            if (!file.exists()) {
+                throw FileNotFoundException("$fileName was not found. Please try again.")
+            }
+
+            return file
+        }
+        catch (e: FileNotFoundException) {
+            println("${e.message}")
+        }
+    }
+}
 
 /*
 Description: Used to count total amount of words.
@@ -162,7 +162,7 @@ fun stopWords(allLines: MutableList<List<String>>) {
     val stopWordsMap = mutableMapOf<String, Boolean>()
 
     for (i in stopWords) {
-        stopWordsMap[i] = stopWords.contains(i)
+        stopWordsMap[i] = wordsList.contains(i)
     }
 
     println("\nStop words:")
@@ -186,7 +186,7 @@ fun top20wordCloud(wordFreq: List<WordFrequency>) {
     wordCloud.setColorPalette(com.kennycason.kumo.palette.ColorPalette(Color(52, 180, 235), Color(247, 45, 122)))
     wordCloud.setFontScalar(LinearFontScalar(10, 40))
     wordCloud.build(wordFreq)
-    wordCloud.writeToFile("C:/Users/My PC/Downloads/output.png")
+    wordCloud.writeToFile("C:/Users/My PC/Downloads/top20wordCloud.png")
 }
 
 /*
@@ -220,6 +220,11 @@ fun monthlyPostsGraph(allLines: MutableList<List<String>>) {
     SwingWrapper(barChart).displayChart() // Displays the chart
 }
 
+/*
+Description: Used to generate a pie graph of the frequency of symbols found in the 'text' column.
+Parameters: allLines is a List of List of Strings
+Return type: none
+*/
 fun symbolsGraph(allLines: MutableList<List<String>>) {
     val symbolsList = mutableListOf<Char>()
 
@@ -246,15 +251,12 @@ fun symbolsGraph(allLines: MutableList<List<String>>) {
 }
 
 fun main() {
-
-    val filePath = "E:/Media Files/Real Stuff/School/Activities/Year 2/Term 1/CSADPRG/MCO2/fake_tweets.csv"
-
-    val file = File(filePath)
+    val file = fileScan()
     val allLines = mutableListOf<List<String>>()
     val top20 = mutableMapOf<String, Int>()
 
     file.forEachLine { line ->
-        val wholeLine = line.split(",").map {it.lowercase()}
+        val wholeLine = line.split(",").map { it.lowercase() }
         allLines.add(wholeLine)
     }
 
