@@ -1,16 +1,15 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
 	"io"
-	"strconv"
-	"strings"
-	"unicode"
-
-	"encoding/csv"
 	"os"
 	"sort"
+	"strconv"
+	"strings"
 	"time"
+	"unicode"
 
 	vicanso "github.com/vicanso/go-charts/v2"
 
@@ -24,6 +23,7 @@ var total_words, unique_words int
 var word_counts = make(map[string]int, 0)
 var char_counts = make(map[string]int, 0)
 var spec_counts = make(map[string]int, 0)
+var stop_word_counts = make(map[string]int, 0)
 var monthly_data = make(map[string]int, 0)
 
 // each column in the csv file
@@ -32,9 +32,21 @@ var user_id, date_created, text []string
 // time format
 const time_format = "2006-01-02 15:06:05"
 
+// initialize stop words
+var stop_words = []string{
+	"the", "be", "to", "of", "and", "a", "in", "that", "have", "I",
+	"it", "for", "not", "on", "with",
+}
+
 type string_value struct {
 	String string
 	Value  int
+}
+
+func init() {
+	for _, word := range stop_words {
+		stop_word_counts[word] = 0
+	}
 }
 
 func get_csv(file_name string) [][]string {
@@ -73,8 +85,13 @@ func count_all() {
 	for _, entry := range text {
 		word_list := strings.Split(strings.ToLower(entry), " ") // split the words by " "
 		for _, word := range word_list {
-			word_counts[word] += 1
-			total_words += 1
+			word_counts[word]++
+			total_words++
+
+			// Check if the word is a stop word and increment its count
+			if _, exists := stop_word_counts[word]; exists {
+				stop_word_counts[word]++
+			}
 
 			for _, char := range word {
 				if is_alphanum(char) {
@@ -186,6 +203,7 @@ func view_results() {
 	sorted_chars := sort_list(char_counts)
 	sorted_specs := sort_list(spec_counts)
 	sorted_words := sort_list(word_counts)
+	sorted_stop_words := sort_list(stop_word_counts)
 
 	fmt.Println()
 
@@ -228,12 +246,19 @@ func view_results() {
 	for _, entry := range sorted_words {
 		fmt.Printf("%s: %d\n", entry.String, entry.Value)
 	}
+
+	fmt.Println()
+
+	fmt.Println("Stop Words (sorted by count)")
+	for _, entry := range sorted_stop_words {
+		fmt.Printf("%s: %d\n", entry.String, entry.Value)
+	}
 }
 
 func write_file(buff []byte, filename string) error {
 	err := os.WriteFile(filename, buff, 0600)
 	if err != nil {
-		fmt.Println(">>> PLOT_PIE : Cannot save bar chart")
+		fmt.Println(">>> PLOT_PIE : Cannot save chart")
 		return err
 	}
 
@@ -319,10 +344,13 @@ func plot_wc() *echarts_charts.WordCloud {
 	wc := echarts_charts.NewWordCloud()
 	wc.SetGlobalOptions(
 		echarts_charts.WithTitleOpts(echarts_option.Title{
-			Title: "Frequency of All Words",
+			Title: "Wordcloud of top 20 words",
 		}))
 
-	wc.AddSeries("wordcloud", generate_plot_wc_data(word_counts)).SetSeriesOptions(echarts_charts.WithWorldCloudChartOpts(echarts_option.WordCloudChart{SizeRange: []float32{14, 140}}))
+	// FIXME: change this to top 20 words
+	wc.AddSeries("wordcloud", generate_plot_wc_data(word_counts)).SetSeriesOptions(
+		echarts_charts.WithWorldCloudChartOpts(
+			echarts_option.WordCloudChart{SizeRange: []float32{14, 140}}))
 
 	return wc
 }
@@ -342,9 +370,9 @@ func make_plot_wc() {
 }
 
 func main() {
-	// fmt.Print("Enter filename: ")
-	// fmt.Scan(&file_name)
-	file_name = "fake_tweets.csv"
+	fmt.Print("Enter filename: ")
+	fmt.Scan(&file_name)
+	// file_name = "fake_tweets.csv"
 
 	data := get_csv(file_name)
 	arrange_data(data)

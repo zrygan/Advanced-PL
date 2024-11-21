@@ -2,7 +2,7 @@
 ******************
 Last names: Ganituen
 Language: Go
-Paradigm(s): Imperative, Procedural 
+Paradigm(s): Imperative, Procedural
 ******************
 */
 
@@ -60,4 +60,3 @@ func main() {
 	fmt.Printf("Monthly Repayment: PHP %.2f\n", monthlyRepayment)
 	fmt.Printf("Total Interest: PHP %.2f\n", totalInterest)
 }
-
