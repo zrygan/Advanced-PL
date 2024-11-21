@@ -34,7 +34,7 @@ Return type: File
 fun fileScan(): File {
     val scanner = Scanner(System.`in`)
 
-    while (true) { // while  loop to check if file exists
+    while (true) { // while loop to check if file exists
         try { // try-catch to not stop program when file doesn't exist
             print("Input file name (including extension): ")
             val fileName = scanner.nextLine()
@@ -194,7 +194,7 @@ fun top20wordCloud(wordFreq: List<WordFrequency>) {
     wordCloud.setColorPalette(com.kennycason.kumo.palette.ColorPalette(Color(52, 180, 235), Color(247, 45, 122)))
     wordCloud.setFontScalar(LinearFontScalar(10, 40))
     wordCloud.build(wordFreq)
-    wordCloud.writeToFile("C:/Users/My PC/Downloads/top20wordCloud.png")
+    wordCloud.writeToFile("top20wordCloud.png")
 }
 
 /*
