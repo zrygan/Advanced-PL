@@ -200,65 +200,57 @@ func months_to_numeric(months []string) []string {
 	return months_converted
 }
 
+func get_total_stop_words_count() int {
+	total := 0
+	for _, count := range stop_word_counts {
+		total += count
+	}
+	return total
+}
+
 func view_results() {
 	fmt.Println("--- Results ---")
 	fmt.Println("Total Words: " + to_str(total_words))
 	fmt.Println("Unique Words: " + to_str(unique_words))
 
 	top_20_words := get_top_n(sort_list(word_counts), 20)
-	top_10_specs := get_top_n(sort_list(spec_counts), 10)
 	top_months := get_top_n(sort_list(monthly_data), 12)
 	sorted_chars := sort_list(char_counts)
 	sorted_specs := sort_list(spec_counts)
-	sorted_words := sort_list(word_counts)
 	sorted_stop_words := sort_list(stop_word_counts)
 
 	fmt.Println()
 
-	fmt.Println("Top 20 most frequent words")
+	fmt.Println("Top 20 most frequent words:")
 	for _, entry := range top_20_words {
 		fmt.Printf("%s: %d\n", entry.String, entry.Value)
 	}
 
 	fmt.Println()
 
-	fmt.Println("Top 10 most frequent special characters")
-	for _, entry := range top_10_specs {
-		fmt.Printf("%s: %d\n", entry.String, entry.Value)
-	}
-
-	fmt.Println()
-
-	fmt.Println("Tweets per Month")
-	for _, entry := range top_months {
-		fmt.Printf("%s: %d\n", entry.String, entry.Value)
-	}
-
-	fmt.Println()
-
-	fmt.Println("All Characters (sorted by count)")
-	for _, entry := range sorted_chars {
-		fmt.Printf("%s: %d\n", entry.String, entry.Value)
-	}
-
-	fmt.Println()
-
-	fmt.Println("All Special Characters (sorted by count)")
+	fmt.Println("All Special Characters (sorted by count):")
 	for _, entry := range sorted_specs {
 		fmt.Printf("%s: %d\n", entry.String, entry.Value)
 	}
 
 	fmt.Println()
 
-	fmt.Println("All Words")
-	for _, entry := range sorted_words {
+	fmt.Println("Total Stop Words: " + to_str(get_total_stop_words_count()))
+	for _, entry := range sorted_stop_words {
 		fmt.Printf("%s: %d\n", entry.String, entry.Value)
 	}
 
 	fmt.Println()
 
-	fmt.Println("Stop Words (sorted by count)")
-	for _, entry := range sorted_stop_words {
+	fmt.Println("Month Tweets:")
+	for _, entry := range top_months {
+		fmt.Printf("%s: %d\n", entry.String, entry.Value)
+	}
+
+	fmt.Println()
+
+	fmt.Println("All Chars (sorted by count):")
+	for _, entry := range sorted_chars {
 		fmt.Printf("%s: %d\n", entry.String, entry.Value)
 	}
 }
