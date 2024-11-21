@@ -1,8 +1,13 @@
+<<<<<<< HEAD
+# NOTE: TO MAKE GRAPHS WORK, MAKE SURE TO BE IN THE MCO2 FOLDER WHEN RUNNING
+# THE CREATION SEEMS TO BREAK AND PLACE IMAGES IN CURRENT DIRECTORY OTHERWISE
+=======
 =begin
   Last names: Miranda
   Language: Ruby
   Paradigm(s):Multi-paradigm: Object-Oriented Programming, Functional, and Generic
 =end
+>>>>>>> 4a05da53d291205ca676c0aae196cf76c4105888
 
 require 'csv'
 require 'date'
@@ -95,8 +100,8 @@ end
     puts "#{word}: #{count}"
   end
 
-  puts "\nTop 10 most frequent special characters:"
-  special.sort_by { |symbol, count| -count }.first(10).each do |char, count|
+  puts "\nAll special characters:"
+  special.sort_by { |symbol, count| -count }.each do |char, count|
     puts "#{char}: #{count}"
   end
 
@@ -115,15 +120,15 @@ end
     puts "#{char}: #{count}"
   end
 
-  puts "\nALL SPECIAL CHARS"
-  special.sort_by { |symbol, count| -count }.each do |symbol, count|
-    puts "#{symbol}: #{count}" 
-  end
+  # puts "\nALL SPECIAL CHARS"
+  # special.sort_by { |symbol, count| -count }.each do |symbol, count|
+  #   puts "#{symbol}: #{count}" 
+  # end
 
-  puts "\nALL WORDS"
-  word_count.sort_by { |word, count| -count }.each do |word, count|
-    puts "#{word}: #{count}" 
-  end
+  # puts "\nALL WORDS"
+  # word_count.sort_by { |word, count| -count }.each do |word, count|
+  #   puts "#{word}: #{count}" 
+  # end
 
 
 # GRAPH MAKINGS
@@ -137,13 +142,17 @@ end
 
 # by using Ruby's json library, requests can be easily sent
 
+# The word cloud api groups up character combinations so when given
+# user####, it will group up all "users"
+# it doesn't show special symbols such as hashtags
+
 wordcloud_setup = {
   format: "png",
   width: 1000,
   height: 1000,
   fontFamily: "sans-serif",
   scale: "linear",
-  text: word_count.map { |word, count| ([word] * count).join(' ') }.join(' ')
+  text: word_count.sort_by { |word, count| -count }.first(20).map { |word, count| ([word] * count).join(' ') }.join(' ')
 }
 
 # Convert the setup to json
@@ -219,7 +228,7 @@ else
 end
 
 def random_color
-  format('#%06x', rand(0..0xFFFFFF))
+  return format('#%06x', rand(0..0xFFFFFF))
 end
 
 # Pie Chart Setups
