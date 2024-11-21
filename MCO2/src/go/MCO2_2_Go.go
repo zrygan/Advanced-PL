@@ -347,7 +347,6 @@ func plot_wc() *echarts_charts.WordCloud {
 			Title: "Wordcloud of top 20 words",
 		}))
 
-	// FIXME: change this to top 20 words
 	wc.AddSeries("wordcloud", generate_plot_wc_data(word_counts)).SetSeriesOptions(
 		echarts_charts.WithWorldCloudChartOpts(
 			echarts_option.WordCloudChart{SizeRange: []float32{14, 140}}))
